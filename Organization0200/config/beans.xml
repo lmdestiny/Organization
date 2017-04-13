@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+<!-- 定义路径扫描器,分散配置 -->
+<context:property-placeholder location="classpath:jdbc.properties"/>
+<mybatis-spring:scan base-package="com.lmdestiny.dao"/>
+<context:component-scan base-package="com.lmdestiny.mapper,
+							com.lmdestiny.service.impl,
+							com.lmdestiny.control"/>
+<!--c3p0配置数据源  -->
+<bean id="pooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverclass}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="${c3p0.pool.size.max}"/>
+        <property name="minPoolSize" value="${c3p0.pool.size.min}"/>
+        <property name="initialPoolSize" value="${c3p0.pool.size.ini}"/>
+        <property name="acquireIncrement" value="${c3p0.pool.size.increment}"/>
+</bean>
+	
+<!-- 配置SessionFactory -->
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+ 	<property name="dataSource" ref="pooledDataSource" />
+ 	<property name="configLocation" value="classpath:mapper.xml"/>
+ 	<property name="mapperLocations" value="classpath:com/lmdestiny/mapper/*.xml"/>
+</bean>
+
+							
+<!-- spring事务管理 -->
+<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="pooledDataSource"/>
+</bean>
+<!-- 事物通知 -->
+<tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
+<tx:attributes>
+	<tx:method name="save*" propagation="REQUIRED" isolation="DEFAULT"/>
+	<tx:method name="update*" propagation="REQUIRED" isolation="DEFAULT" />
+	<tx:method name="delete*" propagation="REQUIRED" isolation="DEFAULT"/>
+	
+	<tx:method name="batch*" propagation="REQUIRED" isolation="DEFAULT"/>
+	<tx:method name="load*" propagation="REQUIRED" isolation="DEFAULT" read-only="true" />
+	<tx:method name="get*" propagation="REQUIRED" isolation="DEFAULT" read-only="true" />
+	<tx:method name="find*" propagation="REQUIRED" isolation="DEFAULT" read-only="true" />
+	
+	<tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" />
+</tx:attributes>
+</tx:advice>
+<!-- 切入点 -->
+<aop:config>
+	<aop:advisor advice-ref="txAdvice" pointcut="execution(* com.lmdestiny.service.*.*(..))" order="1"/>
+</aop:config>
+</beans>

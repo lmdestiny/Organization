@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lmdestiny.dao.OrganizationDao">
+
+<insert  id="saveOrganizarion" parameterType="com.lmdestiny.model.Organization">
+	insert into t_d0_organization(id,orgno,orgcode,orgname,exetype,areacode,
+	linkadd,listingdate,standalonedate,areatype,zbbdocdate,orglevel,
+	orgpro,zipcode) values(#{id},#{orgNo},#{orgCode},#{orgName},#{exeType},#{areaCode},
+	#{linkAdd},#{listingDate},#{standaloneDate},#{areaType},#{zbbdocDate},#{orgLevel},
+	#{orgPro},#{zipCode})
+</insert>
+<select id="getAllOrganization"  resultType="com.lmdestiny.model.Organization">
+	select * from t_d0_organization order by orgNo asc limit #{0},#{1}
+</select>
+<select id="getTotalNumber" resultType="Integer">
+	select count(*) from t_d0_organization
+</select>
+</mapper>

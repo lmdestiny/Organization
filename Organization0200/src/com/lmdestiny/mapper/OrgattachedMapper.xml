@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lmdestiny.dao.OrgattachedDao">
+	<insert id="saveOrgattached" parameterType="com.lmdestiny.model.Orgattached" >
+		insert into t_d0_orgattached(id,orgId,orgName,orgNo,orgCode,onworkerNum,
+		supervisorNum,zbbNum,ifPublicmanage,retireNum,officeBuildarea,
+		buildingOwnership,officeBuildingarea,businessDivCount,funDivCount,
+		orgCount,equ3Count,equ2Count,equ1Count,busCount,rapidtestvehicleCount,
+		motorCount,cameraCount,videoCount,copycatNum,computerNum,notepadNum,
+		serverCount,pbxCount,faxCount,ohpCount,yearly,vrCount) 
+		values(#{id},#{organization.id},#{orgName},#{orgNo},#{orgCode},#{onworkerNum},
+		#{supervisorNum},#{zbbNum},#{ifPublicmanage},#{retireNum},#{officeBuildarea},
+		#{buildingOwnership},#{officeBuildingarea},#{businessDivCount},#{funDivCount},
+		#{orgCount},#{equ3Count},#{equ2Count},#{equ1Count},#{busCount},
+		#{rapidtestvehicleCount},
+		#{motorCount},#{cameraCount},#{videoCount},#{copycatNum},#{computerNum},
+		#{notepadNum},
+		#{serverCount},#{pbxCount},#{faxCount},#{ohpCount},#{yearly},#{vrCount})
+	</insert>
+</mapper>
